@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./database/database.js";
 import productModel from "./models/product.model.js";
 import productsRouter from "./routes/products.routes.js";
+import userRouter from "./routes/user.routes.js";
 
 // Get the express instance to start the app
 const app = express();
@@ -15,9 +16,9 @@ app.use(express.json()); // To parse JSON data
 app.use(cors("*")); // To avoid CORS error
 app.use(cookieParser()); // To parse cookies
 
-
 // Project routes
-app.use("/products", productsRouter);
+app.use("/api/auth", userRouter)
+app.use("/api/products", productsRouter);
 
 // Test route
 app.get("/", (req, res) => {

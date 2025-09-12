@@ -8,7 +8,14 @@ export const getProducts = async (req, res) => {
 }
 
 export const createProduct = async (req, res) => {
-  const { name, description, price, stock, imageUrl, category } = req.body;
+console.log(req.body);
+
+  const { name, description, price, stock, imageUrl, category } = req.body.data;
+  if (!name || !description || !price || !stock || !imageUrl || !category) {
+    return res.status(400).json({
+        message:"All fields are required"
+    })
+  }
 
   const newProduct = new productModel({
     name,
@@ -33,7 +40,7 @@ export const createProduct = async (req, res) => {
   })
 };
 
-export const updateProduct = async (req, res) => {
+export const getProductById = async (req, res) => {
   const id = req.params.id;
 
   const products = await productModel.findById(id);
