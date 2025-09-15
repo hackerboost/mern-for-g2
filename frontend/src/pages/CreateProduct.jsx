@@ -1,9 +1,11 @@
 import { useProductStore } from "@/store/useProductStore";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function CreateProduct() {
-  const { createProduct, isLoadingProducts } = useProductStore();
+  const navigate = useNavigate();
+  const { createProduct, isCreatingProduct } = useProductStore();
   const [formData, setFormData] = useState({
     name: "",
     price: 0,
@@ -13,11 +15,22 @@ function CreateProduct() {
     description: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    createProduct(formData)
-  }
+    const success = await createProduct(formData)
+    if (success) {
+      setFormData({
+        name: "",
+        price: 0,
+        stock: 0,
+        imageUrl: "",
+        category: "",
+        description: "",
+      });
+      navigate("/")
+    }
+    }
 
   return (
     <div className="w-full">
@@ -130,10 +143,10 @@ function CreateProduct() {
 
           <button
             type="submit"
-            className={`px-6 py-3 text-2xl cursor-pointer rounded flex items-center gap-2 justify-center disabled:opacity-50 ${isLoadingProducts ? "cursor-not-allowed bg-gray-600 text-white" : "bg-blue-950 text-white"}`}
-            disabled={isLoadingProducts}
+            className={`px-6 py-3 text-2xl cursor-pointer rounded flex items-center gap-2 justify-center disabled:opacity-50 ${isCreatingProduct ? "cursor-not-allowed bg-gray-600 text-white" : "bg-blue-950 text-white"}`}
+            disabled={isCreatingProduct}
           >
-            <Loader2 className={`h-6 w-6 ${isLoadingProducts ? "animate-spin" : "hidden"}`} />
+            <Loader2 className={`h-6 w-6 ${isCreatingProduct ? "animate-spin" : "hidden"}`} />
             Submit
           </button>
         </form>
