@@ -1,7 +1,9 @@
+import DeleteProduct from '@/components/DeleteProduct';
 import ProductCard from '@/components/ProductCard'
+import UpdateProduct from '@/components/UpdateProduct';
 import { useProductStore } from '@/store/useProductStore';
 import { Loader, Rocket } from 'lucide-react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 
 // const mockProducts = [
@@ -58,9 +60,12 @@ import React, { useEffect } from 'react'
 // ];
 function HomePage() {
   const {fetchProducts, isLoadingProducts, products} = useProductStore();
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   
   useEffect(() => {
-    if (products.length < 1) {
+    if (products?.length < 1) {
       fetchProducts()
     }
   }, [products])
@@ -82,11 +87,31 @@ function HomePage() {
         <div className='grid grid-cols-3 gap-10'>
           {
             products?.map((product, index) => (
-              <ProductCard product={product} key={index} />
+              <ProductCard 
+              product={product}
+              setUpdateModalOpen={setUpdateModalOpen} 
+              key={index} 
+              setSelectedProduct={setSelectedProduct}
+                setDeleteModalOpen={setDeleteModalOpen}
+              />
             ))
           }
         </div>
       </div>
+      {
+        updateModalOpen && <UpdateProduct 
+          updateModalOpen={updateModalOpen}
+          setUpdateModalOpen={setUpdateModalOpen}
+          selectedProduct={selectedProduct}
+        />
+      }
+      {
+        deleteModalOpen && <DeleteProduct
+          deleteModalOpen={deleteModalOpen}
+          setDeleteModalOpen={setDeleteModalOpen}
+          selectedProduct={selectedProduct}
+        />
+      }
     </div>
   )
 }

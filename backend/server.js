@@ -29,53 +29,6 @@ app.get("/fawaz", (req, res) => {
   res.send("API is working for fawaz");
 });
 
-app.put("/products/:id", async (req, res) => {
-  const id = req.params.id;
-  
-  const {name, description, price, stock, category, imageUrl} = req.body;
-
-  let updatedProduct = {};
-
-  if (name){
-    updatedProduct.name = name;
-  }
-  if (description){
-    updatedProduct.description = description;
-  }
-  if (price){
-    updatedProduct.price = price;
-  }
-  if (stock){
-    updatedProduct.stock = stock;
-  }
-  if (category){
-    updatedProduct.category = category;
-  }
-  if (imageUrl){
-    updatedProduct.imageUrl = imageUrl;
-  }
-
-const productUpdated =  await productModel.findByIdAndUpdate(id, updatedProduct, {
-    new: true
-});
-
-  return res.status(200).json({
-    message: "Product updated successfully",
-    productUpdated
-  })
-});
-
-app.delete("/products/:id", async (req, res) => {
-  const id = req.params.id;
-
-const productDeleted =  await productModel.findByIdAndDelete(id);
-
-  return res.status(200).json({
-    message: "Product deleted successfully",
-    productDeleted
-  })
-});
-
 
 app.post("/fawaz", (req, res) => {
   const { name, age } = req.body;

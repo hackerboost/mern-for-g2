@@ -1,9 +1,9 @@
 import { EditIcon, Trash2Icon } from "lucide-react";
 import React from "react";
 
-function ProductCard({ product }) {
+function ProductCard({ product, setUpdateModalOpen, key, setSelectedProduct, setDeleteModalOpen }) {
   return (
-    <div className="shadow rounded-lg border border-gray-500/25">
+    <div key={key} className="shadow rounded-lg border border-gray-500/25">
       <div>
         <img src={product.imageUrl} alt={product.name} className="rounded-t-lg"/>
         <div className="p-6 bg-gray-300">
@@ -13,11 +13,21 @@ function ProductCard({ product }) {
           <p className="line-clamp-4">{product.description}</p>
 
           <div className="mt-6 flex items-center gap-4">
-            <button className="bg-blue-600 p-2 rounded hover:bg-blue-800 cursor-pointer">
+            <button 
+            onClick={() => {
+              setSelectedProduct(product)
+              setUpdateModalOpen(true)
+            }}
+            className="bg-blue-600 p-2 rounded hover:bg-blue-800 cursor-pointer">
               <EditIcon className="text-white"/>
             </button>
 
-            <button className="bg-red-600 p-2 rounded hover:bg-red-800 cursor-pointer">
+            <button 
+             onClick={() => {
+              setSelectedProduct(product)
+              setDeleteModalOpen(true)
+            }}
+            className="bg-red-600 p-2 rounded hover:bg-red-800 cursor-pointer">
               <Trash2Icon className="text-white"/>
             </button>
           </div>

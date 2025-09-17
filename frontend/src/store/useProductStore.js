@@ -5,6 +5,8 @@ export const useProductStore = create((set) => ({
   products: [],
   isLoadingProducts: false,
   isCreatingProduct: false,
+  isUpdatingProduct: false,
+  isDeletingProduct: false,
 
   createProduct: async (data) => {
     set({ isCreatingProduct: true });
@@ -58,4 +60,56 @@ export const useProductStore = create((set) => ({
           set({isLoadingProducts: false});
     }
   },
+
+  updateProduct: async (updatedProduct) => {
+    set({ isUpdatingProduct: true });
+
+    // Validations the data before sending to the backend
+    if (
+      !updatedProduct.name ||
+      !updatedProduct.description ||
+      !updatedProduct.price ||
+      !updatedProduct.stock ||
+      !updatedProduct.category ||
+      !updatedProduct.imageUrl 
+    ) {
+      console.log("All fields are required");
+      set({ isUpdatingProduct: false });
+      return;
+    }
+
+    try {
+      const response = await api.put(`/products/${updatedProduct.id}`, { updatedProduct });
+
+        console.log("Update Response:", response);
+
+      set({ isUpdatingProduct: false });
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      set({ isUpdatingProduct: false });
+    } finally {
+      set({ isUpdatingProduct: false });
+    }
+  },
+
+  deleteProduct: async (id) => {
+    set({ isDeletingProduct: true });
+
+    try {
+      const response = await api.delete(`/products/${id}`);
+      console.log("Delete Response:", response);
+
+      set({ isDeletingProduct: false });
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      set({ isDeletingProduct: false });
+    } finally {
+      set({ isDeletingProduct: false });
+    }
+  }
+
 }));
