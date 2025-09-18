@@ -1,10 +1,16 @@
 import { Moon, PlusSquareIcon, Plus, ShoppingCart, Search } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import LoginModal from "./LoginModal";
+import SignupModal from "./SignupModal";
+import { useUserStore } from "@/store/useUserStore";
+import { DropdownMenuComponent } from "./DropdownMenu";
 
 function Header() {
-  const user = {};
-  const isAuthenticated = false;
+  const {authUser, isAuthenticated} = useUserStore();
+
+  const [loginModal, setLoginModal] = useState(false);
+  const [signupModal, setSignupModal] = useState(false);
 
   return (
     <div className="relative w-full p-6 bg-gray-300 shadow-xl">
@@ -47,23 +53,20 @@ function Header() {
           {/* User Authentication logic */}
           <div>
            {isAuthenticated ? (
-              <div className="flex items-center gap-2">
-                <img
-                  src={user.avatar || "./avatar.jpeg"}
-                  alt="User Avatar"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              </div>
+              <DropdownMenuComponent authUser={authUser} />
             ) : (
-              <Link to="/login">
-                <button className="py-2 px-4 bg-blue-950 rounded cursor-pointer text-white">
+                <button
+                  onClick={() => setLoginModal(!loginModal)}
+                  className="py-2 px-4 bg-blue-950 rounded cursor-pointer text-white"
+                >
                   Login
                 </button>
-              </Link>
             )}
           </div>
         </div>
       </div>
+      {loginModal && <LoginModal loginModal={loginModal} setLoginModal={setLoginModal} setSignupModal={setSignupModal} />}
+      {signupModal && <SignupModal signupModal={signupModal} setSignupModal={setSignupModal} setLoginModal={setLoginModal} />}
     </div>
   );
 }

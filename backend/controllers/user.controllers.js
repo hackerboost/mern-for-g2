@@ -38,7 +38,7 @@ export const registerUser = async (req, res) => {
 
     await newUser.save();
 
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
       message: "New User Created Successfully",
       user: newUser,
@@ -127,6 +127,29 @@ export const loginUser = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error logging in user",
+    });
+  }
+};
+
+// @desc    Logout user
+// @route   POST /api/users/logout
+// @access  Private
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "User logged out successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error logging out user",
     });
   }
 };
