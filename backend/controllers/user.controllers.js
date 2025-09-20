@@ -118,10 +118,8 @@ export const loginUser = async (req, res) => {
     res.json({
       success: true,
       message: "Login successful",
-      data: {
-        user,
-        token,
-      },
+      user,
+      token,
     });
   } catch (error) {
     res.status(500).json({
@@ -150,6 +148,45 @@ export const logoutUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Error logging out user",
+    });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const { data } = req.body;
+
+  const { name, email, phone, avatar } = data;
+
+  try {
+    // Find the user by ID (assuming req.user.id contains the authenticated user's ID)
+    const user = await userModel.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Update user fields
+    user.name = name || user.name; // Update name only if provided
+    user.phone = phone || user.phone; // Update phone only if provided
+    user.avatar = avatar || user.avatar; // Update avatar only if provided
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      user,
+    });
+  } catch (error) {
+    console.log("Internal server error", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error,
     });
   }
 };
